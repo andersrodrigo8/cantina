@@ -1,0 +1,140 @@
+<h2 class="email-open-header">
+	Responder/Encaminhar a --> Re: Timelogs of last client  
+</h2>
+
+<form enctype="multipart/form-data" action="dummy.php" method="POST" class="form-horizontal">
+
+	<div class="inbox-info-bar no-padding">
+		<div class="row">
+			<div class="form-group">
+				<label class="control-label col-md-1"><strong>Para</strong></label>
+				<div class="col-md-11">
+					<input class="form-control" placeholder="Email" type="text">
+					<em><a href="javascript:void(0);" class="show-next" rel="tooltip" data-placement="bottom" data-original-title="Com Cópia">Com Cópia</a></em>
+				</div>
+			</div>
+		</div>	
+	</div>
+	
+	<div class="inbox-info-bar no-padding hidden">
+		<div class="row">
+			<div class="form-group">
+				<label class="control-label col-md-1"><strong>CC</strong></label>
+				<div class="col-md-11">
+					<input class="form-control" placeholder="Email" type="text">
+				</div>
+			</div>
+		</div>	
+	</div>
+	
+	<div class="inbox-info-bar no-padding">
+		<div class="row">
+			<div class="form-group">
+				<label class="control-label col-md-1"><strong>Assunto</strong></label>
+				<div class="col-md-11">
+					<input class="form-control" placeholder="Email Assunto" type="text" value="Re: Timelogs of last client">
+					<em><a href="javascript:void(0);" class="show-next" rel="tooltip" data-placement="bottom" data-original-title="Anexos"><i class="fa fa-paperclip fa-lg"></i></a></em>
+				</div>
+			</div>
+		</div>	
+	</div>
+
+	<div class="inbox-info-bar no-padding hidden">
+		<div class="row">
+			<div class="form-group">
+				<label class="control-label col-md-1"><strong>Anexos</strong></label>
+				<div class="col-md-11">
+					<input class="form-control fileinput" type="file" multiple="multiple">
+				</div>
+			</div>
+		</div>	
+	</div>
+	
+	<div class="inbox-message no-padding">
+	
+		<div id="emailbody">
+			
+			
+			COLOCAR O NOVO CONTEUDO DO EMAIL AQUI
+
+			<br><br>
+			<img src="img/logo_pmesp.jpg" height="100" width="auto" style="margin-top:7px; padding-right:9px; border-right:1px dotted #9B9B9B;">
+			<br><br>
+			<div class="email-reply-text">
+				<p>
+					Sadi Orlaf <span class="text-primary">&lt;sadi.orlaf@smartadmin.com&gt;</span> para mim em 12:10AM, 12 March 2013
+				</p>
+				
+				<div>
+					
+					CORPO DO EMAIL QUE VAI SER RESPONDIDO AQUI
+
+				</div>
+
+				
+			</div>
+
+		</div>	
+	</div>
+	
+	<div class="inbox-compose-footer">
+
+		<button class="btn btn-danger" type="button" id="cancelar">
+			Cancelar <i class="fa fa-close fa-lg"></i>
+		</button>
+
+		<button data-loading-text="&lt;i class='fa fa-refresh fa-spin'&gt;&lt;/i&gt; &nbsp; Enviando..." class="btn btn-primary pull-right" type="button" id="send">
+			Enviar <i class="fa fa-arrow-circle-right fa-lg"></i>
+		</button>
+
+
+	</div>
+
+</form>
+
+<script>
+	
+	// DO NOT REMOVE : GLOBAL FUNCTIONS!
+	//pageSetUp();
+	runAllForms();
+	
+	// PAGE RELATED SCRIPTS
+	
+	$(".table-wrap [rel=tooltip]").tooltip();
+	
+
+
+		$('#emailbody').summernote({
+			height : 250,
+			focus : true,
+			tabsize : 2
+		});
+	
+	
+	$(".show-next").click(function(){
+		$this = $(this);
+		$this.hide();
+		$this.parent().parent().parent().parent().parent().next().removeClass("hidden");
+	})
+	
+	$("#send").click(function(){
+
+	    var $btn = $(this);
+	    $btn.button('loading');
+		
+		// wait for animation to finish and execute send script
+		setTimeout(function (){
+			//Insert send script here
+
+			
+			// Load inbox once send is complete
+			loadURL("ajax/email/email-list2.html", $('#inbox-content > .table-wrap'))
+            
+         }, 1000); // how long do you want the delay to be? 
+	});
+
+	$("#cancelar").click(function () {
+	    loadURL("ajax/email/email-list2.html", $('#inbox-content > .table-wrap'));
+	});
+		
+</script>
