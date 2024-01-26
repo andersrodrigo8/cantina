@@ -94,7 +94,7 @@
                                         <div class="col-md-5 col-sm-12 col-xs-12">
                                             <div class="product-image">
                                                 <!--<img src="<?php echo $resultado['pathfoto'];?>" width=200 height=200 class="img-responsive"> -->
-                                                <img title="<?php echo $resultado['descricao']; ?>" src="<?php echo $resultado['pathfoto'];?>" width=194 height=228> 
+                                                <img src="<?php echo $resultado['pathfoto'];?>" width=194 height=228> 
                                                 <?php if($resultado['promocao']){ ?>
                                                     <span class="tag2 hot" title="O Gerente Ficou Doido, PROMOÇÃO!">
                                                         Prom.
@@ -123,7 +123,7 @@
 	                                        </select>
                                             <br>
                                             <a title="Comprar" id="<?php echo $resultado['id']; ?>" onClick="CarregaProduto(this.id);" class="btn btn-success btn-lg" data-toggle="modal" data-target="#myModal"><i class="fa fa-money"></i> Comprar</a>
-                                            <!-- <a title="Carrinho" onclick="cesta(this.id);" id="cesta_<?php echo $resultado['id']; ?>" class="btn btn-info btn-lg"><i class="fa fa-shopping-basket"></i> Adicionar</a> -->
+                                            <a title="Carrinho" onclick="cesta(this.id);" id="cesta_<?php echo $resultado['id']; ?>" class="btn btn-info btn-lg"><i class="fa fa-shopping-basket"></i> Adicionar</a>
                                         </div>
                                     </div>
                                 </div>
@@ -165,21 +165,18 @@
                                     <input type="hidden" class="form-control" id="qtaselecionada" value=""/>
 
                                     <div class="form-group">
-                                        <label>Produto</label>
                                         <input type="text" class="form-control" id="produtotitulo" autocomplete="off" value="" readonly/>
                                     </div>
                                 </div>
 
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>Valor Unitário</label>
                                         <input type="text" class="form-control" id="valorunit" autocomplete="off" value="" readonly/>
                                     </div>
                                 </div>
 
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>Valor Total</label>
                                         <input type="text" class="form-control" id="valortotal" autocomplete="off" value="" readonly/>
                                     </div>
                                 </div>
@@ -190,9 +187,6 @@
                                     <div class="form-group">
                                         <label for="tags"> Senha </label>
                                         <input type="numeric" autocomplete="off" class="form-control" id="Senha" placeholder="Senha" value="" />
-                                        <div class="note">
-						<strong>Aviso</strong> Usuário que possui letra no RE trocar para 0
-					</div>
                                     </div>
                                 </div>
                             </div>
@@ -235,9 +229,6 @@
                                     <div class="form-group">
                                         <label for="tags"> Senha </label>
                                         <input type="numeric" autocomplete="off" class="form-control" id="Senha2" placeholder="Senha" value="" />
-					<div class="note">
-                                            <strong>Aviso</strong> Usuário que possui letra no RE trocar para 0
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -259,11 +250,6 @@
 		</div>
 		<!-- END MAIN CONTENT -->
 
-		<form class="hidden" id="listaConsumo" action="listaConsumo.php" method="POST" target="_blank">
-			<input type="password" name="password" id="password"> 
-			<button type="submit" class="btn btn-primary">Buscar</button>
-		</form>
-
 	
 	<!-- END MAIN PANEL -->
 
@@ -273,7 +259,7 @@
 	<!--================================================== -->
 
 	<!-- PACE LOADER - turn this on if you want ajax loading to show (caution: uses lots of memory on iDevices)-->
-	<!-- <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script data-pace-options="{ &quot;restartOnRequestAfter&quot;: true }" src="js/plugin/pace/pace.min.js"></script> -->
+	<script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script><script data-pace-options="{ &quot;restartOnRequestAfter&quot;: true }" src="js/plugin/pace/pace.min.js"></script>
 
 	<!-- Link to Google CDN's jQuery + jQueryUI; fall back to local -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -378,17 +364,18 @@
 
         function CarregaProduto(id){
             limparDados();
-            var select = document.getElementById("Quantidade_"+id);
-            var text = select.options[select.selectedIndex].text;
-            $.post("eventos.php",{id:id, evento:'SelecionaProduto', 'qtdSelect':text}, function (data){
+            $.post("eventos.php",{id:id, evento:'SelecionaProduto'}, function (data){
                 if((data.length > 0) || typeof(data) !== "undefined"){
                     var MeuObjeto = JSON.parse(data);
-		    document.getElementById("Senha").value = null;
-            	    document.getElementById("qtaselecionada").value = text;
+
+                    var select = document.getElementById("Quantidade_"+id);
+            		var text = select.options[select.selectedIndex].text;
+
+            		document.getElementById("qtaselecionada").value = text;
                     document.getElementById("idproduto").value = id;
                     document.getElementById("produtotitulo").value = MeuObjeto[0].titulo;
                     document.getElementById("valorunit").value = MeuObjeto[0].valor; 
-                    document.getElementById("valortotal").value = MeuObjeto[0].totalvalor;
+                    document.getElementById("valortotal").value = parseFloat(MeuObjeto[0].valor) * parseFloat(text);
                 }
             });
         }
@@ -431,10 +418,6 @@
                             $('#tabelaMostruario').empty();
                             $('#tabelaMostruario').append(MeuObjeto[0].html);
 
-                            setTimeout(function() {
-								document.getElementById("password").value = password;
-                            	$('#listaConsumo').submit();
-							}, 3000);
                         }else{
                             $.bigBox({
                                 title: "AVISO COMPRA",
@@ -527,28 +510,18 @@
                             $('#tabelaMostruario').empty();
                             $('#tabelaMostruario').append(MeuObjeto[0].html);
 
-			    			cestaCompra = [];
-
-                            $('#carrinho').addClass('hidden');
-
-                            $('#carrinhocompras').empty();
-                            $('#tabelaCarrinho').empty();
-                            $('#totalCesta').empty();
-
-                            $('#myModal2').modal('hide');
-
                         }
                     }
                 });
             } 
             
-            //location.reload();
+            location.reload();
         }
 	</script>
 
 	<!-- Your GOOGLE ANALYTICS CODE Below -->
 	<script>
-		/*var _gaq = _gaq || [];
+		var _gaq = _gaq || [];
 			_gaq.push(['_setAccount', 'UA-XXXXXXXX-X']);
 			_gaq.push(['_trackPageview']);
 		
@@ -559,7 +532,8 @@
 			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
 			var s = document.getElementsByTagName('script')[0];
 			s.parentNode.insertBefore(ga, s);
-		})();*/
+		})();
+
 	</script>
 	
 	</div>
